@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>uz影视 资源添加</title>
+        <style>
+            :root {
+                --primary-color: #4361ee;
+                --primary-hover: #3a56d4;
+                --secondary-color: #2ec4b6;
+                --accent-color: #ff9f1c;
+                --danger-color: #e71d36;
+                --dark-color: #011627;
+                --light-color: #fdfffc;
+                --gray-color: #e0e0e0;
+                --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                --transition: all 0.3s ease;
+            }
+
+            body {
+                font-family: 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+                min-height: 100vh;
+                color: #333;
+                line-height: 1.6;
+            }
+
+            a {
+                color: var(--primary-color);
+                text-decoration: none;
+                transition: var(--transition);
+            }
+
+            a:hover {
+                color: var(--primary-hover);
+                text-decoration: underline;
+            }
+
+            .page-header {
+                text-align: center;
+                margin-bottom: 30px;
+                background: white;
+                padding: 25px;
+                border-radius: 12px;
+                box-shadow: var(--box-shadow);
+                animation: fadeIn 0.8s ease;
+            }
+
+            .page-title {
+                font-size: 2em;
+                font-weight: bold;
+                color: var(--primary-color);
+                margin-bottom: 15px;
+            }
+
+            .page-description {
+                color: #555;
+                font-size: 1em;
+                line-height: 1.6;
+                margin-bottom: 10px;
+            }
+
+            .custom-resource {
+                margin: 25px 0;
+                padding: 25px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: var(--box-shadow);
+                transition: var(--transition);
+                animation: slideUp 0.5s ease;
+            }
+
+            .custom-resource:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .custom-resource h3 {
+                color: var(--primary-color);
+                margin-top: 0;
+                font-size: 1.5em;
+                position: relative;
+                padding-bottom: 10px;
+            }
+
+            .custom-resource h3:after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 50px;
+                height: 3px;
+                background: var(--primary-color);
+                border-radius: 3px;
+            }
+
+            .url-input-container {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin: 20px 0;
+            }
+
+            .custom-resource input {
+                flex-grow: 1;
+                padding: 12px 15px;
+                margin: 0;
+                border: 1px solid var(--gray-color);
+                border-radius: 8px;
+                font-size: 1em;
+                transition: var(--transition);
+                box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+            }
+
+            .custom-resource input:focus {
+                outline: none;
+                border-color: var(--primary-color);
+                box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+            }
+
+            .paste-btn {
+                padding: 8px 12px;
+                background-color: #6c757d;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+                font-size: 0.9em;
+                transition: var(--transition);
+            }
+
+            .paste-btn:hover {
+                background-color: #5a6268;
+            }
+
+            .resource-group {
+                margin-bottom: 20px;
+                padding: 20px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: var(--box-shadow);
+                display: flex;
+                flex-direction: column;
+                transition: var(--transition);
+                animation: slideUp 0.5s ease;
+                animation-fill-mode: both;
+            }
+
+            .resource-group:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
+
+            .resource-header {
+                display: flex;
+                flex-direction: column;
+                margin-bottom: 15px;
+            }
+
+            .resource-title {
+                font-weight: bold;
+                margin-bottom: 8px;
+                font-size: 1.2em;
+                color: var(--primary-color);
+            }
+
+            .resource-description {
+                color: #666;
+                margin-bottom: 15px;
+                font-size: 0.95em;
+                line-height: 1.5;
+            }
+
+            .button-row {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 12px;
+                flex-wrap: wrap;
+            }
+
+            .btn {
+                padding: 10px 18px;
+                background-color: var(--primary-color);
+                color: white;
+                text-decoration: none;
+                border-radius: 8px;
+                border: none;
+                cursor: pointer;
+                flex-shrink: 0;
+                min-width: 70px;
+                text-align: center;
+                transition: var(--transition);
+                font-weight: 500;
+            }
+
+            .btn:hover {
+                background-color: var(--primary-hover);
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+            .error {
+                color: var(--danger-color);
+                margin-top: 10px;
+                font-size: 0.9em;
+                background: rgba(231, 29, 54, 0.1);
+                padding: 8px 12px;
+                border-radius: 6px;
+                display: none;
+            }
+
+            .error.show {
+                display: block;
+                animation: shake 0.5s ease;
+            }
+
+            .copy-btn {
+                padding: 10px 18px;
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                flex-shrink: 0;
+                min-width: 70px;
+                text-align: center;
+                transition: var(--transition);
+                font-weight: 500;
+            }
+
+            .copy-btn:hover {
+                background-color: #25a99d;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .help-btn {
+                padding: 10px 18px;
+                background-color: var(--accent-color);
+                color: white;
+                border: none;
+                border-radius: 8px;
+                cursor: pointer;
+                flex-shrink: 0;
+                min-width: 70px;
+                text-align: center;
+                transition: var(--transition);
+                font-weight: 500;
+            }
+
+            .help-btn:hover {
+                background-color: #e5900a;
+                transform: translateY(-2px);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+            .warning-text {
+                color: var(--accent-color);
+                font-weight: bold;
+            }
+
+            .toast {
+                position: fixed;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0, 0, 0, 0.8);
+                color: white;
+                padding: 12px 25px;
+                border-radius: 50px;
+                font-size: 0.9em;
+                z-index: 1000;
+                opacity: 0;
+                transition: opacity 0.3s;
+                pointer-events: none;
+            }
+
+            .toast.show {
+                opacity: 1;
+            }
+
+            /* 动画效果 */
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+
+            @keyframes slideUp {
+                from { 
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to { 
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                20%, 40%, 60%, 80% { transform: translateX(5px); }
+            }
+
+            /* 响应式调整 */
+            @media (max-width: 600px) {
+                .button-row {
+                    justify-content: center;
+                }
+                
+                .btn, .copy-btn, .help-btn {
+                    padding: 8px 15px;
+                    font-size: 0.9em;
+                }
+                
+                .page-title {
+                    font-size: 1.6em;
+                }
+            }
+
+            /* 为资源卡片添加延迟动画 */
+            #resourcesContainer .resource-group:nth-child(1) { animation-delay: 0.1s; }
+            #resourcesContainer .resource-group:nth-child(2) { animation-delay: 0.2s; }
+            #resourcesContainer .resource-group:nth-child(3) { animation-delay: 0.3s; }
+            #resourcesContainer .resource-group:nth-child(4) { animation-delay: 0.4s; }
+            #resourcesContainer .resource-group:nth-child(5) { animation-delay: 0.5s; }
+            #resourcesContainer .resource-group:nth-child(6) { animation-delay: 0.6s; }
+            #resourcesContainer .resource-group:nth-child(7) { animation-delay: 0.7s; }
+            #resourcesContainer .resource-group:nth-child(8) { animation-delay: 0.8s; }
+            #resourcesContainer .resource-group:nth-child(9) { animation-delay: 0.9s; }
+            #resourcesContainer .resource-group:nth-child(10) { animation-delay: 1s; }
+        </style>
+    </head>
+
+    <body>
+        <div class="page-header">
+            <div class="page-title">uz影视 资源添加</div>
+            <div class="page-description">uz影视 版本需要 v1.6.41 及以上，建议先打开 app 停留在首页</div>
+            <div class="page-description warning-text">
+                当点击添加无效时，请尝试特殊添加。还是不行复制链接，uz影视 -> 设置 -> 数据管理 -> 订阅 -> +
+            </div>
+        </div>
+
+        <div class="custom-resource">
+            <h3>添加资源</h3>
+            <div class="url-input-container">
+                <input type="text" id="customUrl" placeholder="请输入资源链接" />
+            </div>
+            <div id="errorMessage" class="error"></div>
+            <div class="button-row">
+                <button class="btn" onclick="installResource(false)">添加</button>
+                <button class="btn" onclick="installResource(true)">特殊添加</button>
+            </div>
+        </div>
+
+        <div class="page-description warning-text" style="margin-top: 20px; margin-bottom: 10px;">以下资源收录自网络，请自行甄别。</div>
+        <div id="resourcesContainer"></div>
+        <div id="toast" class="toast"></div>
+
+        <script>
+            const configs = [
+                {
+                    title: 'uz影视 all in one 直连版',
+                    description: '由豆整理的 <a href="https://gitee.com/woleigedouer/uzVideo-extensions">豆的 gitee</a>，感谢豆',
+                    resourceUrl: 'https://gitee.com/woleigedouer/uzVideo-extensions/raw/main/uzAio_gitee.json',
+                },
+                {
+                    title: 'uz影视 all in one 无代理',
+                    description: '整合大佬们开发的资源，感谢所有大佬',
+                    resourceUrl: 'https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/uzAio_raw.json',
+                },
+                {
+                    title: 'uz影视 all in one',
+                    description: '整合大佬们开发的资源，感谢所有大佬',
+                    resourceUrl: 'https://github.moeyy.xyz/https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/uzAio.json',
+                },
+                {
+                    title: 'pv大佬 all in one',
+                    description: "<a href='https://github.com/proversion2024'>proversion2024</a> 大佬 all in one，感谢大佬",
+                    resourceUrl: 'https://ghproxy.cn/https://raw.githubusercontent.com/proversion2024/uz-extensions/refs/heads/master/uzAio.json',
+                },
+                {
+                    title: '视频源扩展',
+                    description: "视频源扩展大多由 <a href='https://github.com/Yswag'>Yswag</a> 大佬开发，感谢大佬",
+                    resourceUrl: 'https://github.moeyy.xyz/https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/vod.json',
+                },
+                {
+                    title: '网盘工具扩展-夸克、UC、阿里',
+                    description: "阿里解析功能由 <a href='https://github.com/wangdepeng100'>wangdepeng100</a> 大佬开发，感谢大佬。iOS15 以下系统无法使用，夸克需要会员",
+                    resourceUrl: 'https://github.moeyy.xyz/https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/panTools/panTools.json',
+                },
+                {
+                    title: '网盘工具扩展-夸克、UC、阿里、天翼',
+                    description: "<a href='https://github.com/proversion2024'>proversion2024</a>   大佬开发，感谢大佬。iOS15 以下系统无法使用，夸克需要会员",
+                    resourceUrl: 'https://ghproxy.cn/https://raw.githubusercontent.com/proversion2024/uz-extensions/refs/heads/master/panTools/panTools.json',
+                },
+                {
+                    title: '网盘源',
+                    description: "<a href='https://github.com/proversion2024'>proversion2024</a>   大佬开发，感谢大佬",
+                    resourceUrl: 'https://ghproxy.cn/https://raw.githubusercontent.com/proversion2024/uz-extensions/refs/heads/master/vod/vod.json',
+                },
+                {
+                    title: '推荐首页扩展',
+                    description: '展示视频推荐',
+                    resourceUrl: 'https://github.moeyy.xyz/https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/recommend/douban.json',
+                },
+                {
+                    title: '采集站',
+                    description: '采集站资源，不需要添加太多两个够用',
+                    resourceUrl: 'https://github.moeyy.xyz/https://raw.githubusercontent.com/YYDS678/uzVideo/main/video_sources_default.json',
+                },
+            ]
+
+            function validateUrl(url) {
+                try {
+                    new URL(url)
+                    return true
+                } catch (error) {
+                    return false
+                }
+            }
+
+            function showError(message) {
+                const errorEl = document.getElementById('errorMessage')
+                errorEl.textContent = message
+                errorEl.classList.add('show')
+                setTimeout(() => {
+                    errorEl.classList.remove('show')
+                }, 5000)
+            }
+
+            function showToast(message) {
+                const toast = document.getElementById('toast')
+                toast.textContent = message
+                toast.classList.add('show')
+                setTimeout(() => {
+                    toast.classList.remove('show')
+                }, 3000)
+            }
+
+            function installResource(isSpecial, configUrl = null) {
+                const urlInput = document.getElementById('customUrl')
+                let url = configUrl || urlInput.value.trim()
+
+                if (!url) {
+                    showError('请输入资源链接')
+                    return
+                }
+
+                if (!validateUrl(url)) {
+                    showError('请输入有效的URL')
+                    return
+                }
+
+                const encodedUrl = encodeURIComponent(url)
+                const baseScheme = 'uzVideo://uzVideo?action=addSub&url='
+                const intentScheme = 'intent://uzVideo?action=addSub&url='
+
+                const finalUrl = isSpecial ? `${intentScheme}${encodedUrl}#Intent;scheme=uzVideo;end` : `${baseScheme}${encodedUrl}`
+
+                // 显示尝试添加的提示
+                showToast(isSpecial ? '尝试特殊添加资源中...' : '添加资源中...')
+                
+                // 添加小延迟，让用户能看到提示
+                setTimeout(() => {
+                    window.location.href = finalUrl
+                }, 500)
+            }
+
+            // 改进的复制函数
+            function copyToClipboard(text) {
+                // 获取选择器
+                const textArea = document.createElement('textarea')
+                textArea.value = text
+                textArea.style.position = 'fixed'
+                textArea.style.left = '-9999px'
+                textArea.style.top = '-9999px'
+                document.body.appendChild(textArea)
+                
+                textArea.focus()
+                textArea.select()
+                
+                let successful = false
+                try {
+                    // 尝试复制
+                    successful = document.execCommand('copy')
+                    if (successful) {
+                        showToast('复制成功！使用路径：uz影视 -> 设置 -> 数据管理 -> 订阅 -> +')
+                    } else {
+                        showToast('复制失败，请手动复制')
+                    }
+                } catch (err) {
+                    showToast('复制失败，请手动复制')
+                }
+                
+                document.body.removeChild(textArea)
+                
+                // 如果原生复制失败，尝试使用clipboard API
+                if (!successful && navigator.clipboard) {
+                    navigator.clipboard.writeText(text)
+                        .then(() => {
+                            showToast('复制成功！使用路径：uz影视 -> 设置 -> 数据管理 -> 订阅 -> +')
+                        })
+                        .catch(() => {
+                            showToast('复制失败，请手动选择链接')
+                        })
+                }
+            }
+
+            window.onload = function () {
+                const container = document.getElementById('resourcesContainer')
+                configs.forEach((config, index) => {
+                    const resourceGroup = document.createElement('div')
+                    resourceGroup.className = 'resource-group'
+                    resourceGroup.style.animationDelay = `${index * 0.1}s`
+                    
+                    resourceGroup.innerHTML = `
+                        <div class="resource-header">
+                            <div class="resource-title">${config.title}</div>
+                            ${config.description ? `<div class="resource-description">${config.description}</div>` : ''}
+                        </div>
+                        <div class="button-row">
+                            <button class="copy-btn" onclick="copyToClipboard('${config.resourceUrl}')">复制链接</button>
+                            <button class="help-btn" onclick="window.open('https://uz-video-five.vercel.app/help.html')">使用教程</button>
+                            <button class="btn" onclick="installResource(false, '${config.resourceUrl}')">添加</button>
+                            <button class="btn" onclick="installResource(true, '${config.resourceUrl}')">特殊添加</button>
+                        </div>
+                    `
+                    container.appendChild(resourceGroup)
+                })
+                
+                // 添加输入框的回车事件监听
+                document.getElementById('customUrl').addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        installResource(false)
+                    }
+                })
+            }
+        </script>
+    </body>
+</html>
